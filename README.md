@@ -103,7 +103,9 @@ phantom_aws:
 
 ```  
 
-ansible-playbook -i hosts --tags "info"
+To show deployment information:
+```ansible-playbook -i hosts site.yml --tags "info"```
+
 Step 04: Login/Verify your images (Not required if all playbooks are run)
 ---
 To login to Phantom wait for a few minutes (5-10) and then you can access the instance at 
