@@ -30,8 +30,7 @@ Notes:
 [Quick Install]
 ---
 1. Complete Steps 01-02
-3. ansible-playbook -i hosts site.yml 
-
+3. ```ansible-playbook -i hosts site.yml ```
 
 
 Step 01: Setup your ansible environment
