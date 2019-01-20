@@ -116,7 +116,7 @@ password: password
 ```
 
 Please change the default admin password asap.
-To login to the Centos Image ssh to the public IP with the -i key option and the file name.
+To login to the Centos or Phantom Image ssh to the public IP with the -i key option and the file name.
 
 Examples:
 

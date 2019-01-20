@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  gather_facts: true
+  vars_files:
+    - root_vars/ec2_create_vars.yml 
+
+  tasks:
+    - name: Base setup of EC2 Instance
+      include_role:
+        name: "ec2_base_setup"
+
+

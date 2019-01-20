@@ -1,0 +1,48 @@
+---
+## Install base packages
+
+- name: Copy htpdate
+  copy:
+    src: roles/ec2_base_setup/files/htpdate-1.1.0-1.el7.rf.x86_64.rpm
+    dest: /tmp
+    remote_src: false
+    mode: preserve
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Install htpdate
+  yum:
+    name: /tmp/htpdate-1.1.0-1.el7.rf.x86_64.rpm
+    update_cache: yes
+    state: present
+  become: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: Setup time sync with Amazon
+  cron:
+    name: "Htpdate AWS"
+    minute: "0"
+    hour: "1"
+    job: "htpdate -D www.amazon.com"  
+    state: present
+  become: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  
+- name: Ensure basic list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - wget
+  become: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Change permission on var/log/secure for Centos user   
+  file:
+    path: /var/log/secure
+    owner: centos
+  become: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+
+

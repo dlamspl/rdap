@@ -29,6 +29,7 @@
         name: "ec2_create"
       tags: info
 
+- import_playbook: base_setup.yml
 
 
 
