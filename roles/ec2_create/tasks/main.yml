@@ -1,0 +1,12 @@
+---
+
+      
+- name: Test ping
+  action: ping
+
+- include_tasks: ec2_splunk.yml
+  when: splunk_init|bool
+
+- include_tasks: ec2_phantom.yml
+  when: phantom_init|bool
+

@@ -1,0 +1,37 @@
+---
+# Global vars for EC2
+# EC2 volume types gp2, io1, st1, sc1, standard
+# For io1 you can set the iops with iops: 1000
+# https://aws.amazon.com/ebs/features/
+region: ap-south-1 # Change the Region
+
+hostpath: "hosts"
+demo_env: 1
+splunk_init: 1
+phantom_init: 1
+
+splunk_aws:
+  instance_type: t2.small
+  security_group_name: splunk-servers # Change the security group name here
+  security_group_desc: "Security Group for splunk Servers"
+  image_ami_id: "ami-1780a878" # This is the linux Centos AMI 
+  hoststring: "ansible_user=centos ansible_ssh_private_key_file=keys/{{ keypair }}.pem"
+  hosts_group: "splunk_servers"
+  instance_name_tag: "RDAPSplunkServer"
+  disk_size: "20"
+  disk_type: "gp2"
+  iops: 1000
+  count_instances: 1
+
+
+phantom_aws:
+  instance_type: t2.medium
+  security_group_name: phantom-servers # Change the security group name here
+  security_group_desc: "Security Group for phantom Servers"
+  image_ami_id: "ami-09a93840158ec5b96" # This is the Phantom AMI 
+  hoststring: "ansible_user=user" #For phantom
+  hosts_group: "phantom_servers"
+  instance_name_tag: "RDAPPhantomServer"
+  disk_size: "200"
+  disk_type: "gp2"  
+  count_instances: 1    

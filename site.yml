@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - root_vars/ec2_credentials_vars.yml  
+    - root_vars/ec2_image_vars.yml  
+  pre_tasks:
+    - name: Ensure boto and boto3 modules are installed
+      pip:
+        name: ['boto3', 'boto', 'botocore']
+
+
+  module_defaults:
+    ec2_group:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+    ec2:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+  tasks:
+    - name: Provision EC2 Instance
+      include_role:
+        name: "ec2_create"
+
+
+
+
