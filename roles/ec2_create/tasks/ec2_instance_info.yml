@@ -1,0 +1,39 @@
+---
+
+
+- name: Gather facts about "{{ splunk_aws.instance_name_tag }}" launched instances
+  ec2_instance_facts:    
+    filters:
+      "tag:Name": '{{ splunk_aws.instance_name_tag }}'
+      instance-state-name: running
+  register: ec2_info_splunk
+  tags: info  
+
+- name: Gather facts about "{{ phantom_aws.instance_name_tag }}" launched instances
+  ec2_instance_facts:    
+    filters:
+      "tag:Name": "{{ phantom_aws.instance_name_tag }}"
+      instance-state-name: running
+  register: ec2_info_phantom
+  tags: info
+
+
+
+- name: Show configured instances "{{ splunk_aws.instance_name_tag }}"
+  debug: 
+    msg: 
+      "Splunk instance: ssh -i keys/{{ keypair }}.pem centos@{{ item.public_ip_address }}"
+      
+  with_items: "{{ ec2_info_splunk.instances }}"
+  tags: info
+
+- name: Show configured instances "{{ phantom_aws.instance_name_tag }}"
+  debug: 
+    msg: 
+      "Phantom instance: https://{{ item.public_ip_address }} 
+      User: admin 
+      Password: password"
+      
+  with_items: "{{ ec2_info_phantom.instances }}"
+  tags: info
+

@@ -18,10 +18,16 @@
     ec2:
       aws_access_key: "{{ aws_access_key }}"
       aws_secret_key: "{{ aws_secret_key }}"
+    ec2_instance_facts:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+
   tasks:
     - name: Provision EC2 Instance
       include_role:
         name: "ec2_create"
+      tags: info
 
 
 

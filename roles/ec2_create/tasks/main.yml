@@ -10,3 +10,5 @@
 - include_tasks: ec2_phantom.yml
   when: phantom_init|bool
 
+- include_tasks: ec2_instance_info.yml
+  tags: info  

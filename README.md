@@ -59,12 +59,52 @@ Step 02: Setup EC2 prerequisites
 - Copy the key file in the ```keys``` directory
 
 - Edit the file ```root_vars/ec2_image_vars.yml```
-- Replace the ```region``` with your desired region name
+- Replace the ```region``` with your desired region name (default is ap-south-1)
+
+Create the images:
+```ansible-playbook -i hosts site.yml```
 
 Consult https://docs.aws.amazon.com/general/latest/gr/rande.html for available AWS region names
 
+Step 03: Customize image settings
+---
+The file root_vars/ec2_image_vars.yml contains several settings for customizing the creation of Splunk and Phantom image on AWS. The below list only shows the ones of interest for first time customization. 
 
-Step 03: Login/Verify your images (Not required if all playbooks are run)
+```
+region: ap-south-1 # Change the Region
+
+demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Progress)
+splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
+phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
+
+splunk_aws:
+  instance_type: t2.small
+  security_group_name: splunk-servers # Change the security group name here
+  security_group_desc: "Security Group for splunk Servers"
+  image_ami_id: "ami-1780a878" # This is the linux Centos AMI 
+  hosts_group: "splunk_servers"
+  instance_name_tag: "RDAPSplunkServer"
+  disk_size: "20" # Disk size in GB
+  disk_type: "gp2" # If you want high IOPS set this to io1
+  iops: 1000 # Set this to IOPS you want if the above setting is io1, otherwise it is ignored
+  count_instances: 1 # How many instances with this tag you want to create
+
+
+phantom_aws:
+  instance_type: t2.medium # Recommended is t2.xlarge but works with t2.medium
+  security_group_name: phantom-servers # Change the security group name here
+  security_group_desc: "Security Group for phantom Servers"
+  image_ami_id: "ami-09a93840158ec5b96" # This is the Phantom AMI 
+  hosts_group: "phantom_servers"
+  instance_name_tag: "RDAPPhantomServer"
+  disk_size: "200" # Minimum default disk size for Phantom
+  disk_type: "gp2"  # Generic disk will give you 600 IOPS
+  count_instances: 1 # How many instances your want to create with this tag
+
+```  
+
+ansible-playbook -i hosts --tags "info"
+Step 04: Login/Verify your images (Not required if all playbooks are run)
 ---
 To login to Phantom wait for a few minutes (5-10) and then you can access the instance at 
 https://PUBLIC_IP
