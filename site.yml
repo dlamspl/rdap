@@ -31,5 +31,8 @@
 
 - import_playbook: base_setup.yml
 
+- import_playbook: base_setup.yml
+  when: splunk_init|bool
+
 
 
