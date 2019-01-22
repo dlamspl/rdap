@@ -54,11 +54,12 @@ Step 02: Setup EC2 prerequisites
 
 - Edit the file ```root_vars/ec2_credentials_vars.yml```
 - Replace ```aws_secret_key/aws_access_key``` with your EC2 API credentials
-- Replace ```keypair``` with your key name
-- Copy the key file in the ```keys``` directory
 
 - Edit the file ```root_vars/ec2_image_vars.yml```
 - Replace the ```region``` with your desired region name (default is ap-south-1)
+- Replace ```keypair``` with your key name
+- Copy the key file in the ```keys``` directory
+
 
 Create the images:
 ```ansible-playbook -i hosts site.yml```
