@@ -30,3 +30,5 @@ Temporary Items
 Splunk_Enterprise_NFR_*
 *.pem
 splunk-enterprise-security_*.spl
+*.retry
+dev*

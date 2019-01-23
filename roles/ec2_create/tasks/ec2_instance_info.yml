@@ -15,9 +15,16 @@
       "tag:Name": "{{ phantom_aws.instance_name_tag }}"
       instance-state-name: running
   register: ec2_info_phantom
-  tags: info
+  tags:
+    - info
 
-
+- lineinfile:
+    path: "root_vars/ec2_image_vars.yml"
+    regexp: '^phantom_default_admin_pass:'
+    line: 'phantom_default_admin_pass: {{ ec2_info_phantom.instances[0].instance_id }} #AUTO CHANGED'
+  delegate_to: localhost
+  tags:
+    - info
 
 - name: Show configured instances "{{ splunk_aws.instance_name_tag }}"
   debug: 
