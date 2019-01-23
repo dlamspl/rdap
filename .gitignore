@@ -25,3 +25,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Personal files
+Splunk_Enterprise_NFR_*
+*.pem
+splunk-enterprise-security_*.spl
