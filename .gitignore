@@ -26,9 +26,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Personal files
+# Other files
 Splunk_Enterprise_NFR_*
 *.pem
 splunk-enterprise-security_*.spl
 *.retry
+tmp
 dev*
