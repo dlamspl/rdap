@@ -1,0 +1,23 @@
+---
+# handlers file for splunk_common
+- name: Restart the splunkd service
+  command: "{{splunk.exec}} restart -f --answer-yes --accept-license"
+  register: task_result
+  until: task_result.rc == 0
+  retries: 3
+  delay: "{{ delay_num }}"
+  notify:
+    - Wait for Splunk process to start
+
+- name: Wait for Splunk process to start
+  wait_for:
+    path: "{{ splunk.pid }}"
+    state: present
+  when: ansible_system is match("Linux")  
+
+- name: Stop the splunkd service
+  command: "{{splunk.exec}} stop"
+  register: task_result
+  until: task_result.rc == 0
+  retries: 3
+  delay: "{{ delay_num }}"

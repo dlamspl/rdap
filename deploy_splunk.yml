@@ -1,0 +1,14 @@
+---
+# Playbook to deploy splunk on existing machines
+- name: Deploy splunk
+  hosts: splunk_servers
+
+  vars_files:
+    - root_vars/splunk_deployment_vars.yml
+    - root_vars/ec2_image_vars.yml 
+  tasks:
+    - name: Base install of Splunk
+      include_role:
+        name: "splunk_common"
+      when: splunk_setup|bool  
+      tags: "phantom-app-config"

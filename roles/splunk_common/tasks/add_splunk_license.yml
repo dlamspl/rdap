@@ -1,0 +1,31 @@
+---
+
+- name: Copy splunk license to remote
+  copy:
+    src: "{{ splunk.license_file }}"
+    dest: ~/
+    remote_src: false
+    mode: preserve
+
+- name: Apply Splunk license
+  command: "{{ splunk.exec }} add licenses {{ splunk_license_local_path }} -auth admin:{{ splunk.password }}"
+  when:
+    - splunk.license_file is defined
+    - splunk.role == "splunk_license_master" or not splunk.license_master_included
+  ignore_errors: true
+  delay: 5
+  notify:
+    - Restart the splunkd service    
+
+
+- name: Set as license slave
+  include_tasks: set_as_license_slave.yml
+  vars:
+    license_master_host: "{{ license_master_host }}"
+  when:
+    - splunk.role != "splunk_license_master"
+
+- name: Flush handlers
+  meta: flush_handlers    
+
+

@@ -1,0 +1,15 @@
+---
+
+- name: Copy app file to remote
+  copy:
+    src: "files/{{ splunk.es_app }}"
+    dest: ~/
+    remote_src: false
+    mode: preserve
+
+- name: Install Splunk ES app
+  command: "{{ splunk.exec }} install app ~/{{ splunk.es_app }} -update 1 -auth admin:{{ splunk.password }}"
+  when: splunk.install_es|bool
+  ignore_errors: true
+  notify:
+    - Restart the splunkd service 

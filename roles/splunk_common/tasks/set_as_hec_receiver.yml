@@ -1,0 +1,59 @@
+---
+
+#splunk http-event-collector enable -uri https://localhost:8089/ 
+#curl -k -X "POST" -u admin:Password1 https://localhost:8089/servicesNS/admin/splunk_httpinput/data/inputs/http/http/enable
+
+
+- name: Enable HEC services
+  uri:
+    url: "https://127.0.0.1:{{ splunk.svc_port }}/servicesNS/admin/splunk_httpinput/data/inputs/http/http/enable"
+    method: POST
+    user: admin
+    password: "{{ splunk.password }}"
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  ignore_errors: true
+  when: not splunk.hec_disabled|bool
+
+- name: Create new HEC token
+  uri:
+    url: "https://127.0.0.1:{{ splunk.svc_port }}/servicesNS/admin/splunk_httpinput/data/inputs/http"
+    method: POST
+    user: admin
+    password: "{{ splunk.password }}"
+    validate_certs: false
+    body: "name=splunk_hec_token&token={{ splunk.hec_token }}"
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    status_code: 201,409
+    timeout: 10
+  ignore_errors: true
+  register: splunk_hec_input
+
+- name: Create new HEC token (App for Infrastructure)
+  uri:
+    url: "https://127.0.0.1:{{ splunk.svc_port }}/servicesNS/admin/splunk_httpinput/data/inputs/http"
+    method: POST
+    user: admin
+    password: "{{ splunk.password }}"
+    validate_certs: false
+    body: "name=app_for_infra&description=TokenForInfra&index=em_metrics&sourcetype=em_metrics&token={{ splunk.hec_token_infrastructure }}"
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    status_code: 201,409
+    timeout: 10
+  ignore_errors: true
+  register: splunk_hec_input
+
+- name: Enable HEC new-token
+  command: "{{ splunk.exec }} http-event-collector enable -name splunk_hec_token -uri https://127.0.0.1:{{ splunk.svc_port }} -auth admin:{{ splunk.password }}"
+  ignore_errors: true
+  when: splunk_hec_input.status != 409
+
+- name: Enable SSL for HEC new-token
+  command: "{{ splunk.exec }} http-event-collector update -uri https://127.0.0.1:{{ splunk.svc_port }} -enable-ssl {{ splunk.hec_enableSSL }} -auth admin:{{ splunk.password }}"
+  ignore_errors: true
+  when: splunk_hec_input.status != 409
+  notify:
+    - Restart the splunkd service

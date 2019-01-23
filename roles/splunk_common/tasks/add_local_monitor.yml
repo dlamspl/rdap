@@ -1,0 +1,5 @@
+---
+
+- name: Monitor local secure log
+  command: "{{ splunk.exec }} add monitor -source /var/log/secure -auth admin:{{ splunk.password }}"
+  ignore_errors: true

@@ -1,0 +1,16 @@
+---
+
+- name: Copy monitor agent file to remote
+  copy:
+    src: "files/add_local_monitoring_agent.sh"
+    dest: ~/
+    remote_src: false
+    mode: preserve
+
+- name: Disable SElinux
+  command: setenforce 0
+  become: yes
+  
+- name: Add localhost as Entity App for Infrastructure
+  command: /usr/bin/sh /home/centos/add_local_monitoring_agent.sh
+  become: yes

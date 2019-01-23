@@ -15,6 +15,7 @@
     update_cache: yes
     state: present
   become: yes
+  ignore_errors: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   
 - name: Setup time sync with Amazon
@@ -25,6 +26,7 @@
     job: "htpdate -D www.amazon.com"  
     state: present
   become: yes
+  ignore_errors: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
   
@@ -35,6 +37,7 @@
     packages:
     - wget
   become: yes
+  ignore_errors: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Change permission on var/log/secure for Centos user   
@@ -42,7 +45,14 @@
     path: /var/log/secure
     owner: centos
   become: yes
+  ignore_errors: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 
+# Fix the locale problem on centos as it creates problem with phantom when installing certs and restarting
+# vi /etc/environment
 
+# add these lines...
+
+# LANG=en_US.utf-8
+# LC_ALL=en_US.utf-8

@@ -1,0 +1,94 @@
+---
+
+
+# tasks file for splunk
+- name: Download splunk main software
+  get_url: 
+    url: "{{ splunk.main_download_url }}"
+    dest: "{{ splunk.main_out_file }}"
+    checksum: md5:ac6f332dc37845e5d68516233cf8dc8e
+
+- name: Unzip Splunk
+  unarchive:
+    src: "{{ splunk.main_out_file }}"
+    dest: "{{ splunk.install_dir }}"
+    remote_src: yes
+
+# - name: Generate user-seed.conf
+#   ini_file:
+#     path: "{{ splunk.home }}/etc/system/local/user-seed.conf"
+#     section: user_info
+#     option: "{{ item.opt }}"
+#     value: "{{ item.val }}"
+#   with_items:
+#     - { opt: 'USERNAME', val: 'admin' }
+#     - { opt: 'PASSWORD', val: '{{ splunk.password }}' }
+#   loop_control:
+#     label: "{{ item.opt }}"  
+
+- name: Remove passwd file
+  file:
+    path: "{{ splunk.home }}/etc/passwd"
+    state: absent
+
+- name: Generate user-seed.conf
+  copy:
+    dest: "{{ splunk.home }}/etc/system/local/user-seed.conf"
+    content: |
+      [user_info]
+      PASSWORD = {{ splunk.password }}
+
+- name: Set init file
+  file:
+    path: ~/splunk_installed
+    state: touch
+
+
+- include_tasks: stop_splunk.yml
+
+- include_tasks: enable_s2s_port.yml
+
+# - name: Change default host value
+#  ini_file:
+#    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+#    section: default
+#    option: "host"
+#    value: "{{ splunk.host_static }}"
+#- include_tasks: start_splunk.yml
+#- include_tasks: stop_splunk.yml
+
+- include_tasks: start_splunk.yml
+
+
+- include_tasks: add_splunk_license.yml
+
+- include_tasks: set_as_hec_receiver.yml
+
+- include_tasks: install_app.yml
+  vars:
+    app_file: "{{ item }}"
+  loop: "{{ splunk.apps }}"
+  notify:
+    - Restart the splunkd service
+
+- include_tasks: install_es.yml
+  when: splunk.install_es|bool
+  notify:
+    - Restart the splunkd service
+
+
+- include_tasks: stop_splunk.yml 
+- include_tasks: start_splunk.yml
+
+- include_tasks: add_local_monitor.yml
+
+- include_tasks: add_infra_local_entity.yml
+
+- include_tasks: splunk_phantom_config.yml
+  tags: phantom-app-config
+  when: phantom_setup|bool
+
+#splunk set minfreemb 2000
+
+
+

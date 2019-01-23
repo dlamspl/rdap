@@ -1,0 +1,14 @@
+---
+
+- name: Copy app file to remote
+  copy:
+    src: "files/{{ app_file }}"
+    dest: ~/
+    remote_src: false
+    mode: preserve
+
+- name: Install Splunk app "{{ app_file }}"
+  command: "{{ splunk.exec }} install app ~/{{ app_file }} -update 1 -auth admin:{{ splunk.password }}"
+  when: splunk.install_apps|bool
+  ignore_errors: true
+ 

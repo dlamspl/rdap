@@ -1,0 +1,16 @@
+---
+
+- name: Check PID
+  stat: 
+    path: "{{ splunk.pid }}"
+  register: spl_pid
+
+- name: Stop Splunk
+  command: "{{ splunk.exec }} stop"
+  when: spl_pid.stat.exists != False
+
+- name: Wait for Splunk process to exit
+  wait_for:
+    path: "{{ splunk.pid }}"
+    state: absent
+  when: ansible_system is match("Linux")
