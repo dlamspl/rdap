@@ -32,25 +32,28 @@
 
     - meta: refresh_inventory
 
-    # Restart it to get the right password
-    - name: Restart phantom instance(s)
-      ec2:
-        region: "{{ region }}"
-        instance_tags:
-          Name: "{{ phantom_aws.instance_name_tag }}"
-        state: restarted
-
-    - pause: 
-        minutes: 1
-        prompt: "Give phantom some time to initiate"
-
-    # Wait for Phantom especially to come up
     - name: Wait for SSH to come up
       delegate_to: "{{ item }}"
       wait_for_connection:
-        delay: 30
+        delay: 20
         timeout: 160
       loop: "{{ groups['all'] }}"
+
+    # # Restart it to get the right password
+    # - name: Restart phantom instance(s)
+    #   ec2:
+    #     region: "{{ region }}"
+    #     instance_tags:
+    #       Name: "{{ phantom_aws.instance_name_tag }}"
+    #     state: restarted
+
+    # - pause: 
+    #     minutes: 1
+    #     prompt: "Give phantom some time to initiate"
+
+
+    # - wait_for: host="{{ groups['phantom_servers'][0] }}" port=443 timeout=40
+    # - debug: msg=ok
  
 
 - import_playbook: wait.yml

@@ -13,7 +13,7 @@ phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS 
 splunk_setup: 0 #Deploy standalone splunk instance
 phantom_setup: 0 #Set to 1 if you want the phantom instance to be added to splunk server
 phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
-phantom_default_admin_pass: i-017cbd417e05303e8 #AUTO CHANGED
+phantom_default_admin_pass: i-00d2ee31335eb1475 #AUTO CHANGED
 
 splunk_aws:
   instance_type: t2.small
@@ -33,7 +33,7 @@ phantom_aws:
   instance_type: t2.large
   security_group_name: phantom-servers # Change the security group name here
   security_group_desc: "Security Group for phantom Servers"
-  image_ami_id: "ami-09a93840158ec5b96" # This is the Phantom AMI 
+  image_ami_id: "ami-09a93840158ec5b96" # This is the Phantom AMI in ap-south-1 SEE README for other region AMI id
   hoststring: "ansible_user=centos ansible_ssh_private_key_file=keys/{{ keypair }}.pem"
   hosts_group: "phantom_servers"
   instance_name_tag: "RDAPPhantomServer"
