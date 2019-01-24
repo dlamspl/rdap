@@ -4,16 +4,16 @@
 # For io1 you can set the iops with iops: 1000
 # https://aws.amazon.com/ebs/features/
 region: ap-south-1 # AWS Region
-keypair: your_key_name #your aws key pair name
+keypair: splunk-dlam-mumbai #your aws key pair name
 
 hostpath: "hosts"
 demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Progress)
 splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
 phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
-splunk_setup: 1 #Deploy standalone splunk instance
-phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+splunk_setup: 0 #Deploy standalone splunk instance
+phantom_setup: 0 #Set to 1 if you want the phantom instance to be added to splunk server
 phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
-phantom_default_admin_pass: "This will be changed automatically"
+phantom_default_admin_pass: i-017cbd417e05303e8 #AUTO CHANGED
 
 splunk_aws:
   instance_type: t2.small
@@ -30,7 +30,7 @@ splunk_aws:
 
 
 phantom_aws:
-  instance_type: t2.medium
+  instance_type: t2.large
   security_group_name: phantom-servers # Change the security group name here
   security_group_desc: "Security Group for phantom Servers"
   image_ami_id: "ami-09a93840158ec5b96" # This is the Phantom AMI 

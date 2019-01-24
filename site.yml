@@ -24,6 +24,7 @@
       region: "{{ region }}"
 
   tasks:
+
     - name: Provision EC2 Instance
       include_role:
         name: "ec2_create"
@@ -31,21 +32,26 @@
 
     - meta: refresh_inventory
 
+    # Restart it to get the right password
+    - name: Restart phantom instance(s)
+      ec2:
+        region: "{{ region }}"
+        instance_tags:
+          Name: "{{ phantom_aws.instance_name_tag }}"
+        state: restarted
+
+    - pause: 
+        minutes: 1
+        prompt: "Give phantom some time to initiate"
+
     # Wait for Phantom especially to come up
     - name: Wait for SSH to come up
       delegate_to: "{{ item }}"
       wait_for_connection:
-        delay: 10
+        delay: 30
         timeout: 160
-      loop: "{{groups['all']}}"
-
-    # And restart it to get the right password
-    - local_action:
-        module: ec2
-        region: "{{ region }}"
-        instance_tags:
-            Name: "{{ phantom_aws.instance_name_tag }}"
-        state: restarted
+      loop: "{{ groups['all'] }}"
+ 
 
 - import_playbook: wait.yml
 
@@ -54,7 +60,7 @@
 
 #Splunk install
 - import_playbook: deploy_splunk.yml
-  when: splunk_setup|bool
+  when: splunk_init|bool
 
 
 

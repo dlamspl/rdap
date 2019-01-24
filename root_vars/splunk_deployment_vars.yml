@@ -1,10 +1,10 @@
 ---
 delay_num: 100
-splunk_license_local_path: "~/LICENSE_FILE.lic"
+splunk_license_local_path: "~/Splunk_Enterprise_NFR_Q4FY19.lic"
 
 splunk:
   version: 7.2.3
-  license_file: "files/LICENSE_FILE.lic"
+  license_file: "files/Splunk_Enterprise_NFR_Q4FY19.lic"
   host_static: "splunk_aws"
   main_download_url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.3&product=splunk&filename=splunk-7.2.3-06d57c595b80-Linux-x86_64.tgz&wget=true"
   main_out_file: "/tmp/splunk-7.2.1-be11b2c46e23-Linux-x86_64.tgz"
