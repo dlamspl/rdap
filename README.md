@@ -130,3 +130,61 @@ Examples:
 
 Check the hosts file and make sure the right IPs are under the correct group. Verify on AWS the settings
 
+Notes
+---
+The phantom AMI depends on the region you want to launch. Below is the list:
+```
+"Regions": {
+                    "ap-south-1": {
+                        "AMI": "ami-09a93840158ec5b96"
+                    },
+                    "eu-west-3": {
+                        "AMI": "ami-040cb59393cca4878"
+                    },
+                    "eu-north-1": {},
+                    "eu-west-2": {
+                        "AMI": "ami-00b69a9a45c7eaf08"
+                    },
+                    "eu-west-1": {
+                        "AMI": "ami-06208808bbe8ef7c1"
+                    },
+                    "ap-northeast-3": {},
+                    "ap-northeast-2": {
+                        "AMI": "ami-0122ca7b405c4c6f2"
+                    },
+                    "ap-northeast-1": {
+                        "AMI": "ami-07912cf8e9bc14f79"
+                    },
+                    "sa-east-1": {
+                        "AMI": "ami-0f13e69e99e9f1e5a"
+                    },
+                    "ca-central-1": {
+                        "AMI": "ami-0e132362946493737"
+                    },
+                    "ap-east-1": {},
+                    "us-gov-west-1": {},
+                    "ap-southeast-1": {
+                        "AMI": "ami-080372805f70ba8ab"
+                    },
+                    "ap-southeast-2": {
+                        "AMI": "ami-0359bfa90f41e2da3"
+                    },
+                    "us-iso-east-1": {},
+                    "eu-central-1": {
+                        "AMI": "ami-01e37b8af6b40feb5"
+                    },
+                    "us-east-1": {
+                        "AMI": "ami-06fd96560236e4999"
+                    },
+                    "us-east-2": {
+                        "AMI": "ami-0bbe4dcad193b8cec"
+                    },
+                    "us-west-1": {
+                        "AMI": "ami-0c423333f915db472"
+                    },
+                    "us-west-2": {
+                        "AMI": "ami-0a110df615e0ca83d"
+                    }
+                }
+            }
+```
