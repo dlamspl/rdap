@@ -31,6 +31,24 @@
 
     - meta: refresh_inventory
 
+    # Wait for Phantom especially to come up
+    - name: Wait for SSH to come up
+      delegate_to: "{{ item }}"
+      wait_for_connection:
+        delay: 10
+        timeout: 160
+      loop: "{{groups['all']}}"
+
+    # And restart it to get the right password
+    - local_action:
+        module: ec2
+        region: "{{ region }}"
+        instance_tags:
+            Name: "{{ phantom_aws.instance_name_tag }}"
+        state: restarted
+
+- import_playbook: wait.yml
+
 #Base setup of centos OS stuff
 - import_playbook: base_setup.yml
 

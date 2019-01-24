@@ -1,6 +1,6 @@
 ---
 
-- name: Create security group
+- name: Create security group for Phantom
   ec2_group:
     name: "{{ phantom_aws.security_group_name }}"
     description: "{{ phantom_aws.security_group_desc }}"
@@ -19,7 +19,7 @@
     state: present
   register: security_group
 
-- name: Create EC2 instance (Default)
+- name: Create Phantom EC2 instance (Default)
   ec2:
     instance_tags:
         Name: "{{ phantom_aws.instance_name_tag }}"
@@ -41,9 +41,9 @@
   
 
 
-- name: DEBUG
-  debug: var=item
-  with_items: "{{ ec2.tagged_instances }}"
+# - name: DEBUG
+#   debug: var=item
+#   with_items: "{{ ec2.tagged_instances }}"
 
 # - name: Gather facts about the launched instances
 #   ec2_instance_facts:
@@ -54,7 +54,7 @@
 
 #   register: ec2_info
 
-- name: Add the newly created EC2 instance(s) to hosts group
+- name: Add the newly created Phantom EC2 instance(s) to hosts group
   ini_file:
     path: "{{ hostpath }}"
     section: "{{ phantom_aws.hosts_group }}"
@@ -62,12 +62,13 @@
     allow_no_value: true
   with_items: "{{ ec2.tagged_instances }}"
 
-- name: Wait for SSH to come up
-  local_action: wait_for 
-                host={{ item.public_ip }} 
-                port=22 
-                state=started
-  with_items: "{{ ec2.tagged_instances }}"
+
+# - name: Wait for SSH to come up
+#   local_action: wait_for 
+#                 host={{ item.public_ip }} 
+#                 port=22 
+#                 state=started
+#   with_items: "{{ ec2.tagged_instances }}"
 
 
 

@@ -3,9 +3,14 @@
 - hosts: all
   gather_facts: true
   vars_files:
-    - root_vars/ec2_create_vars.yml 
+    - root_vars/ec2_image_vars.yml 
 
   tasks:
+    # - name: Wait for SSH to come up
+    #   wait_for_connection:
+    #     delay: 20
+    #     timeout: 120
+
     - name: Base setup of EC2 Instance
       include_role:
         name: "ec2_base_setup"

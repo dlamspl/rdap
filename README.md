@@ -71,11 +71,16 @@ Step 03: Customize image settings
 The file ```root_vars/ec2_image_vars.yml``` contains several settings for customizing the creation of Splunk and Phantom image on AWS. The below list only shows the ones of interest for first time customization. 
 
 ```
-region: ap-south-1 # Change the Region
+region: ap-south-1 # AWS Region
+keypair: keypair_name #your aws key pair name
 
 demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Progress)
 splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
 phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
+splunk_setup: 1 #Deploy standalone splunk instance
+phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
+phantom_default_admin_pass: "This will be changed automatically"
 
 splunk_aws:
   instance_type: t2.small
@@ -113,10 +118,9 @@ To login to Phantom wait for a few minutes (5-10) and then you can access the in
 https://PUBLIC_IP
 Use the below credentials to login to the web interface
 username: admin
-password: password
+password: AWS instance ID
 ```
 
-Please change the default admin password asap.
 To login to the Centos or Phantom Image ssh to the public IP with the -i key option and the file name.
 
 Examples:

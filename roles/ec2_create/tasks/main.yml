@@ -1,9 +1,5 @@
 ---
 
-      
-- name: Test ping
-  action: ping
-
 - include_tasks: ec2_splunk.yml
   when: splunk_init|bool
 
@@ -13,4 +9,4 @@
 - include_tasks: ec2_instance_info.yml
   tags:
     - info
-    - phantom-app-config 
+    - phantom-app-config
