@@ -1,10 +1,11 @@
 ---
 delay_num: 100
-splunk_license_local_path: "~/Splunk_Enterprise_NFR_Q4FY19.lic"
+splunk_license_included: 0
+splunk_license_local_path: "~/Splunk_Enterprise.lic"
 
 splunk:
   version: 7.2.3
-  license_file: "files/Splunk_Enterprise_NFR_Q4FY19.lic"
+  license_file: "files/Splunk_Enterprise.lic"
   host_static: "splunk_aws"
   main_download_url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.3&product=splunk&filename=splunk-7.2.3-06d57c595b80-Linux-x86_64.tgz&wget=true"
   main_out_file: "/tmp/splunk-7.2.1-be11b2c46e23-Linux-x86_64.tgz"
@@ -17,16 +18,16 @@ splunk:
   password: Password1
   role: "splunk_license_master"
   license_master_host: ""
-  license_master_included: 
+  license_master_included: 0
   hec_port: 8088
   hec_disabled: 0
   hec_enableSSL: 1
-  hec_token: 13415358-5782-9120-0233-144859576507
+  hec_token: 23415358-5782-9120-0233-144859576507
   hec_token_infrastructure: 13415358-5782-9120-0233-144859576507 
   svc_port: 8089 
   install_apps: 1
-  apps: ['splunk-app-for-infrastructure_122.tgz','splunk-add-on-for-infrastructure_122.tgz','phantom-app-for-splunk_2523.tgz','phantom-audit_02.tgz','phantom-remote-search_107.tgz','splunk-add-on-for-unix-and-linux_601.tgz']
-  install_es: 1
+  apps: ['splunk-app-for-infrastructure_122.tgz','splunk-add-on-for-infrastructure_122.tgz','phantom-app-for-splunk_2622.tgz','phantom-audit_02.tgz','phantom-remote-search_107.tgz','splunk-add-on-for-unix-and-linux_601.tgz']
+  install_es: 0
   es_app: "splunk-enterprise-security_521.spl"
   phantom_config: 1
 
