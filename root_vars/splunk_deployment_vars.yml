@@ -1,21 +1,21 @@
 ---
-delay_num: 100
-splunk_license_included: 0
-splunk_license_local_path: "~/Splunk_Enterprise.lic"
+delay_num: 100 #Generic delay
+splunk_license_included: 0 # If you want to add a license file set this flag to 1. Otherwise 30 day trial is used.
+splunk_license_path: "~/Splunk_Enterprise.lic" # Where to copy the Splunk license file on the remote machine (if license = 1)
 
 splunk:
   version: 7.2.3
-  license_file: "files/Splunk_Enterprise.lic"
-  host_static: "splunk_aws"
+  license_file: "files/Splunk_Enterprise.lic" # Location of license file on local system
+  host_static: "splunk_aws" # Change the name of the splunk host (not implemented)
   main_download_url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.3&product=splunk&filename=splunk-7.2.3-06d57c595b80-Linux-x86_64.tgz&wget=true"
   main_out_file: "/tmp/splunk-7.2.1-be11b2c46e23-Linux-x86_64.tgz"
   forwarder_download_url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.3&product=universalforwarder&filename=splunkforwarder-7.2.3-06d57c595b80-Linux-x86_64.tgz&wget=true"
   forwarder_out_file: "/tmp/splunkforwarder-7.2.1-be11b2c46e23-Linux-x86_64.tgz"
-  install_dir: "~/"
+  install_dir: "~/" # Splunk install dir on remote
   home: "~/splunk"
   exec: "~/splunk/bin/splunk"
   pid: "~/splunk/var/run/splunk/splunkd.pid"
-  password: Password1
+  password: Password1 # Default Splunk instance password
   role: "splunk_license_master"
   license_master_host: ""
   license_master_included: 0
@@ -25,11 +25,11 @@ splunk:
   hec_token: 23415358-5782-9120-0233-144859576507
   hec_token_infrastructure: 13415358-5782-9120-0233-144859576507 
   svc_port: 8089 
-  install_apps: 1
-  apps: ['splunk-app-for-infrastructure_122.tgz','splunk-add-on-for-infrastructure_122.tgz','phantom-app-for-splunk_2622.tgz','phantom-audit_02.tgz','phantom-remote-search_107.tgz','splunk-add-on-for-unix-and-linux_601.tgz']
-  install_es: 0
+  install_apps: 1 # Install apps from list below. The file must exist under the files/ folder
+  apps: ['splunk-app-for-infrastructure_122.tgz','splunk-add-on-for-infrastructure_122.tgz','phantom-app-for-splunk_2523.tgz','phantom-audit_02.tgz','phantom-remote-search_107.tgz','splunk-add-on-for-unix-and-linux_601.tgz']
+  install_es: 0 # Install ES premium app
   es_app: "splunk-enterprise-security_521.spl"
-  phantom_config: 1
+  phantom_config: 1 # Configure Phantom server on Splunk
 
 
 
