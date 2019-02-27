@@ -236,4 +236,4 @@ Features:
 
 Ansible:
 - Enhance service detection and status
-- Make it impotent (Trust me this will not happen any time soon)
+- Make playbooks more atomic (Trust me this will not happen any time soon)
