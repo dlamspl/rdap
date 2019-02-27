@@ -48,12 +48,7 @@
   ignore_errors: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-#- name: Reboot Phantom servers
-- name: Reboot Phantom server
-  delegate_to: "{{ group[phantom_servers][0] }}"
-  shell: "sleep 5 && reboot"
-  async: 1
-  poll: 0
+
 
 # Fix the locale problem on centos as it creates problem with phantom when installing certs and restarting
 # vi /etc/environment

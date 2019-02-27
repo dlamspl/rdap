@@ -1,15 +1,71 @@
 ---
 # Configure phantom app
 
-
 # First retrieve the phantom host IP 
 - set_fact:
     phantom_host: "{{ groups['phantom_servers'][0] }}"
   tags: phantom-app-config
 
-# Get the automation user auth token
+# - set_fact:
+#     phantom_auth_token_real: '{"status":400}' 
+#   tags: phantom-app-config
 
+
+- name: Update automation user API access to any (real pass)
+  uri:
+    url: "https://{{ phantom_host }}/rest/ph_user/2/"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body_format: json
+    src: files/automation_user_body.json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  ignore_errors: true
+  retries: 10
+  tags: phantom-app-config
+
+- name: Update automation user API access to any (default pass)
+  uri:
+    url: "https://{{ phantom_host }}/rest/ph_user/2/"
+    method: POST
+    user: admin
+    password: "{{ phantom_initial_admin_pass }}"
+    body_format: json
+    src: files/automation_user_body.json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  ignore_errors: true
+  retries: 10
+  tags: phantom-app-config
+
+# Get the automation user auth token
 - name: Get Token of automation user
+  uri:
+    url: "https://{{ phantom_host }}/rest/ph_user/2/token"
+    method: GET
+    user: admin
+    password: "{{ phantom_initial_admin_pass }}"
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  ignore_errors: true
+  retries: 10
+  delay: 5
+  register: phantom_auth_token
+  tags: phantom-app-config
+  
+- debug:
+    var=phantom_auth_token
+  tags: phantom-app-config
+
+# Get the automation user auth token second try (bad hack weird behavior)
+- name: Get Token of automation user (with real password)
   uri:
     url: "https://{{ phantom_host }}/rest/ph_user/2/token"
     method: GET
@@ -19,16 +75,25 @@
     validate_certs: false
     status_code: 200
     timeout: 10
-  ignore_errors: false
-  register: phantom_auth_token
-  tags: phantom-app-config
-  
+  ignore_errors: true
+  retries: 10
+  delay: 5
+  register: phantom_auth_token_real
+  #when: phantom_auth_token.status |int != 200
+  tags: phantom-app-config  
 
 - debug:
-    var=phantom_auth_token.json.key
+    var=phantom_auth_token_real
   tags: phantom-app-config
-
 # Store the token to construct curl command 
+
+- lineinfile:
+    path: "root_vars/ec2_image_vars.yml"
+    regexp: '^phantom_auth_token:'
+    line: 'phantom_auth_token: {{ phantom_auth_token_real.json.key }} #AUTO CHANGED'
+  delegate_to: localhost
+  tags: phantom-app-config
+  when: phantom_auth_token_real.status |int == 200
 
 - lineinfile:
     path: "root_vars/ec2_image_vars.yml"
@@ -36,8 +101,22 @@
     line: 'phantom_auth_token: {{ phantom_auth_token.json.key }} #AUTO CHANGED'
   delegate_to: localhost
   tags: phantom-app-config
+  when: phantom_auth_token.status |int == 200
 
+- set_fact:
+    phantom_auth_token: "{{ phantom_auth_token.json.key }}"
+  tags: phantom-app-config
+  when: phantom_auth_token.status |int == 200
+
+- set_fact:
+    phantom_auth_token: "{{ phantom_auth_token_real.json.key }}"
+  tags: phantom-app-config
+  when: phantom_auth_token_real.status |int == 200    
 # Prerequisites on splunk admin should have relevant phantom permissions
+
+- debug:
+    var=phantom_auth_token
+  tags: phantom-app-config
 
 - name: Assign phantom permissions to admin
   uri:
@@ -55,12 +134,30 @@
     status_code: 200
     timeout: 10
   ignore_errors: true
+  tags: phantom-app-config
 
+- name: Create Phantom local directory
+  file: 
+    path: "{{ splunk.home }}/etc/apps/phantom/local/"
+    state: directory
+  tags: phantom-app-config
+
+# Create default phantom app config on Splunk
+- name: Create phantom app default config
+  template:
+    src: phantom_conf.j2
+    dest: "{{ splunk.home }}/etc/apps/phantom/local/phantom.conf"
+  tags: phantom-app-config
+
+- include_tasks: stop_splunk.yml
+  tags: phantom-app-config
+
+- include_tasks: start_splunk.yml
+  tags: phantom-app-config
 
 # This has proven tricky, will debug some other time. For now quick and dirty
 #Construct the required token input for splunk
 # Format: [{'ph-auth-token':'TOKEN','server':'https://PHANTOMHOST'}]"
-
 
 
 - name: Disable phantom certificate validation
@@ -79,33 +176,36 @@
   tags: phantom-app-config
 
 
+- name: URL encode the token
+  delegate_to: localhost
+  script: urlencode.py {{ phantom_auth_token }}
+  register: urlencode_out
+  tags: phantom-app-config
+
+
+- debug:
+    var=urlencode_out
+  tags: phantom-app-config
+
+- set_fact: 
+    phantom_encoded_token: "{{ urlencode_out.stdout }}"
+  tags: phantom-app-config
+
+- debug:
+    var=phantom_encoded_token
+  tags: phantom-app-config
 
 - name: Create phantom config cmd via curl with template
   vars:
-    splunk_phantom_token_for_rest: "{{ phantom_auth_token.json.key }}"
+    #splunk_phantom_token_for_rest: "{{ phantom_auth_token.json.key }}"
+    splunk_phantom_token_for_rest: "{{ phantom_encoded_token }}"
   template:
     src: add_phantom_instance.j2
     dest: "~/config_phantom.sh"
+  # when: phantom_auth_token.status |int != 200 or phantom_auth_token_real.status |int != 200  
   tags: phantom-app-config  
 
 - name: Execute phantom config via generated curl command
   command: /usr/bin/sh ~/config_phantom.sh
   tags: phantom-app-config
 
-#- name: Create phantom config file
-# copy phantom.conf to /splunk/etc/apps/phantom/local
-# cat phantom.conf
-# [phantom]
-# value = {}
-
-# [version]
-# value = "2.5.23"
-
-# [verify_certs]
-# value = true
-
-# [enable_logging]
-# value = true
-
-# [accepted]
-# value = true

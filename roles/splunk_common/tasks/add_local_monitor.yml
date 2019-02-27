@@ -1,4 +1,5 @@
 ---
+# This will add the /var/log/secure to the list of monitored sources
 
 - name: Monitor local secure log
   command: "{{ splunk.exec }} add monitor -source /var/log/secure -auth admin:{{ splunk.password }}"

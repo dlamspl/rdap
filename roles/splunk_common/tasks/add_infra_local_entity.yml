@@ -1,6 +1,6 @@
 ---
-
-- name: Copy monitor agent file to remote
+# Install the local agent for IT App for infrastructure
+- name: Copy Splunk IT App monitor agent file to remote
   copy:
     src: "files/add_local_monitoring_agent.sh"
     dest: ~/

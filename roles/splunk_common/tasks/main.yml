@@ -1,35 +1,28 @@
 ---
+- name: Register splunk init file on remote
+  stat:
+    path: ~/splunk_installed
+  register: splunk_installed_flag
 
-
-# tasks file for splunk
 - name: Download splunk main software
   get_url: 
     url: "{{ splunk.main_download_url }}"
     dest: "{{ splunk.main_out_file }}"
     checksum: md5:ac6f332dc37845e5d68516233cf8dc8e
+  when: splunk_installed_flag.stat.exists == False 
 
 - name: Unzip Splunk
   unarchive:
     src: "{{ splunk.main_out_file }}"
     dest: "{{ splunk.install_dir }}"
     remote_src: yes
-
-# - name: Generate user-seed.conf
-#   ini_file:
-#     path: "{{ splunk.home }}/etc/system/local/user-seed.conf"
-#     section: user_info
-#     option: "{{ item.opt }}"
-#     value: "{{ item.val }}"
-#   with_items:
-#     - { opt: 'USERNAME', val: 'admin' }
-#     - { opt: 'PASSWORD', val: '{{ splunk.password }}' }
-#   loop_control:
-#     label: "{{ item.opt }}"  
+  when: splunk_installed_flag.stat.exists == False
 
 - name: Remove passwd file
   file:
     path: "{{ splunk.home }}/etc/passwd"
     state: absent
+  when: splunk_installed_flag.stat.exists == False     
 
 - name: Generate user-seed.conf
   copy:
@@ -37,30 +30,25 @@
     content: |
       [user_info]
       PASSWORD = {{ splunk.password }}
+  when: splunk_installed_flag.stat.exists == False       
 
 - name: Set init file
   file:
     path: ~/splunk_installed
     state: touch
+  when: splunk_installed_flag.stat.exists == False     
 
+# For some reason the restart handlers dont always work so we need to do 
+# manual start/stop
 
 - include_tasks: stop_splunk.yml
 
 - include_tasks: enable_s2s_port.yml
 
-# - name: Change default host value
-#  ini_file:
-#    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
-#    section: default
-#    option: "host"
-#    value: "{{ splunk.host_static }}"
-#- include_tasks: start_splunk.yml
-#- include_tasks: stop_splunk.yml
-
 - include_tasks: start_splunk.yml
 
-
 - include_tasks: add_splunk_license.yml
+  when: splunk_license_included| bool
 
 - include_tasks: set_as_hec_receiver.yml
 
@@ -76,7 +64,7 @@
   notify:
     - Restart the splunkd service
 
-
+# The handlers for restart ar buggy and dont work most of the times
 - include_tasks: stop_splunk.yml 
 - include_tasks: start_splunk.yml
 
@@ -88,7 +76,7 @@
   tags: phantom-app-config
   when: phantom_setup|bool
 
-#splunk set minfreemb 2000
+
 
 
 

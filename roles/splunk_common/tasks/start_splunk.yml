@@ -1,27 +1,13 @@
 ---
 
-# - name: Check PID
-#   stat: 
-#     path: "{{ splunk.pid }}"
-#   register: spl_pid
-
-# - name: Start Splunk
-#   command: "{{ splunk.exec }} start --accept-license --answer-yes --no-prompt"
-#   when: spl_pid.stat.exists == False
-
 - name: Check if Splunk is running
   shell: ps -ef |  grep splunkd | grep -v grep
   register: process_list
   ignore_errors: true
   changed_when: false  
 
+# Race condition
 - name: Start Splunk v2
   command: "{{ splunk.exec }} start --accept-license --answer-yes --no-prompt"
-  #when: "process_list.stdout.find('splunkd') == -1"    
-  when: process_list.rc != 0
-
-- name: Wait for Splunk process to start
-  wait_for:
-    path: "{{ splunk.pid }}"
-    state: present
-  when: ansible_system is match("Linux")  
+  when: process_list.rc != 0 or "process_list.stdout.find('restart') == 1"    
+  register: splunk_status

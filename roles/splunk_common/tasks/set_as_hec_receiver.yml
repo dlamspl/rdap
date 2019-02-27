@@ -1,9 +1,5 @@
 ---
 
-#splunk http-event-collector enable -uri https://localhost:8089/ 
-#curl -k -X "POST" -u admin:Password1 https://localhost:8089/servicesNS/admin/splunk_httpinput/data/inputs/http/http/enable
-
-
 - name: Enable HEC services
   uri:
     url: "https://127.0.0.1:{{ splunk.svc_port }}/servicesNS/admin/splunk_httpinput/data/inputs/http/http/enable"

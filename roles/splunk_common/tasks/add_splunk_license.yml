@@ -1,5 +1,4 @@
 ---
-
 - name: Copy splunk license to remote
   copy:
     src: "{{ splunk.license_file }}"
@@ -8,7 +7,7 @@
     mode: preserve
 
 - name: Apply Splunk license
-  command: "{{ splunk.exec }} add licenses {{ splunk_license_local_path }} -auth admin:{{ splunk.password }}"
+  command: "{{ splunk.exec }} add licenses {{ splunk_license_path }} -auth admin:{{ splunk.password }}"
   when:
     - splunk.license_file is defined
     - splunk.role == "splunk_license_master" or not splunk.license_master_included
@@ -25,7 +24,5 @@
   when:
     - splunk.role != "splunk_license_master"
 
-- name: Flush handlers
-  meta: flush_handlers    
 
 

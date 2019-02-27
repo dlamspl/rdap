@@ -3,8 +3,7 @@ from __future__ import print_function
 import urllib
 import sys
 
-input = sys.argv[1].replace("'",'"')
-parms = {'config':input}
-print(urllib.urlencode(parms), end='')
+input = sys.argv[1]
+print(urllib.quote_plus(input), end='')
 
 
