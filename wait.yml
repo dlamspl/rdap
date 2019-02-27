@@ -1,4 +1,6 @@
 ---
+# Just wait for SSH to come up on all hosts. This does not necessarily mean the service 
+# running on the host is also ok. Ansible wait_for is more suitable but has proven buggy
 
 - hosts: all
   gather_facts: false
@@ -8,5 +10,5 @@
   tasks:
     - name: Wait for SSH to come up
       wait_for_connection:
-        delay: 10
-        timeout: 160
+        delay: 20
+        timeout: 260

@@ -1,4 +1,6 @@
 ---
+# This is the default playbook for RDAP
+
 - hosts: localhost
   connection: local
   gather_facts: false
@@ -25,6 +27,8 @@
 
   tasks:
 
+# Create EC2 images 
+
     - name: Provision EC2 Instance
       include_role:
         name: "ec2_create"
@@ -32,36 +36,19 @@
 
     - meta: refresh_inventory
 
-    - name: Wait for SSH to come up
-      delegate_to: "{{ item }}"
-      wait_for_connection:
-        delay: 20
-        timeout: 160
-      loop: "{{ groups['all'] }}"
-
-    # # Restart it to get the right password
-    # - name: Restart phantom instance(s)
-    #   ec2:
-    #     region: "{{ region }}"
-    #     instance_tags:
-    #       Name: "{{ phantom_aws.instance_name_tag }}"
-    #     state: restarted
-
-    # - pause: 
-    #     minutes: 1
-    #     prompt: "Give phantom some time to initiate"
-
-
-    # - wait_for: host="{{ groups['phantom_servers'][0] }}" port=443 timeout=40
-    # - debug: msg=ok
- 
 
 - import_playbook: wait.yml
 
 #Base setup of centos OS stuff
+
 - import_playbook: base_setup.yml
 
-#Splunk install
+# This is specific wait playbook for Phantom (buggy)
+
+# - import_playbook: phantom_reboot_wait.yml
+#   when: phantom_init|bool
+
+# Install SPlunk
 - import_playbook: deploy_splunk.yml
   when: splunk_init|bool
 

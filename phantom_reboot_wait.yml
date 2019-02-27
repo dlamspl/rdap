@@ -1,0 +1,24 @@
+---
+
+- hosts: phantom_servers
+  gather_facts: true
+  vars_files:
+    - root_vars/ec2_image_vars.yml 
+
+  tasks:
+    - name: Wait for SSH to come up
+      wait_for_connection:
+        delay: 5
+        timeout: 460
+
+    - name: Reboot Phantom server
+      delegate_to: "{{ groups['phantom_servers'][0] }}"
+      shell: "sleep 10 && reboot"
+      async: 1
+      poll: 0
+
+    - name: Wait for Phantom SSH to come up after reboot
+      wait_for_connection:
+        delay: 30
+        timeout: 460
+

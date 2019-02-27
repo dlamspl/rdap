@@ -1,5 +1,6 @@
 ---
 # Playbook to deploy splunk on existing machines
+# Relevant vars can be found in root_vars/splunk_deployment_vars.yml
 - name: Deploy splunk
   hosts: splunk_servers
 
