@@ -68,7 +68,7 @@ Step 02: Setup EC2 prerequisites
 - Replace ```aws_secret_key/aws_access_key``` with your EC2 API credentials
 
 - Edit the file ```root_vars/ec2_image_vars.yml```
-- Replace the ```region``` with your desired region name (default is ap-south-1)
+- Replace the ```region``` with your desired region name (default is ap-south-1). Note: If you change the region you also have to select the appropriate region AMI for Phantom from list below.
 - Replace ```keypair``` with your key name
 - Copy the key file in the ```keys``` directory
 
