@@ -2,17 +2,29 @@ RDAP
 ---
 
 RDAP is small collection of ansible playbooks aimed at seting up a POC/DEMO environment 
-of splunk and phantom on EC2. This small project started with the following objectives:
+of splunk and phantom on EC2 (plus other stuff ;). This small project started with the following objectives:
 1. Be as standalone as possible. Meaning no specific host OS or minimal installed packages
-2. Easy to run and documented (to a certain extent)
-3. Provide out of the box Splunk standlone and Phantom environment for demo or POC
-4. To learn ansible and Splunk
+2. Easy to run and documented (to a certain extent) so that everyine can use it without being an ansible expert
+3. Provide out of the box Splunk standlone and Phantom environment for demo or POC. And I mean out of the box
+4. To learn ansible and Splunk ! 
+
+So what does this do ?
+---
+In high level it does the following:
+1. Create as many EC2 instances as required, both standard AMIs and Phantom 
+2. Carry out base OS setup (Time, OS packges etc..)
+3. Install Splunk software (currently in standalone mode)
+4. Install various Splunk apps
+5. Configure the Phantom instance on Splunk
+6. Install monitoring agent for IT App for Infrastructure on the Splunk machine
 
 Tested on:
 * Python 2.7.10
 * MacOSX
 * Splunk 7.2
 * Phantom 4.1
+
+Disclaimer: This is not official Splunk repository or code. Use at your own risk. 
 
 What you need
 ---
@@ -66,8 +78,13 @@ Create the images:
 
 Consult https://docs.aws.amazon.com/general/latest/gr/rande.html for available AWS region names
 
-Step 03: Customize image settings
+Step 03: Customize settings
 ---
+Currently you can use variable to customize the creation of the EC2 instances or the Splunk deployment. 
+
+Settings for EC2
+--
+
 The file ```root_vars/ec2_image_vars.yml``` contains several settings for customizing the creation of Splunk and Phantom image on AWS. The below list only shows the ones of interest for first time customization. 
 
 ```
@@ -77,8 +94,8 @@ keypair: keypair_name #your aws key pair name
 demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Progress)
 splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
 phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
-splunk_setup: 1 #Deploy standalone splunk instance
-phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+splunk_setup: 1 # Deploy standalone splunk instance
+phantom_setup: 1 # Set to 1 if you want the phantom instance to be added to splunk server
 phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
 phantom_default_admin_pass: "This will be changed automatically"
 
@@ -108,8 +125,27 @@ phantom_aws:
 
 ```  
 
-To show deployment information:
+Settings for Splunk
+--
+You can change the splunk related variables by editing the file root_vars/splunk_deployment_vars.yml . All apps should be under files/directory.
+```
+delay_num: 100 #Generic delay
+splunk_license_included: 0 # If you want to add a license file set this flag to 1. Otherwise 30 day trial is used.
+splunk_license_path: "~/Splunk_Enterprise.lic" # Where to copy the Splunk license file on the remote machine (if license = 1)
+
+splunk:
+  password: Password1 # Default Splunk instance password
+  install_apps: 0 # Install apps from list below. The file must exist under the files/ folder
+  apps: ['splunk-app-for-infrastructure_122.tgz','splunk-add-on-for-infrastructure_122.tgz']
+  install_es: 0 # Install ES premium app
+  phantom_config: 1 # Configure Phantom server on Splunk
+
+```
+
+To show deployment information after installation has finished:
 ```ansible-playbook -i hosts site.yml --tags "info"```
+
+
 
 Step 04: Login/Verify your images (Not required if all playbooks are run)
 ---
@@ -188,3 +224,15 @@ The phantom AMI depends on the region you want to launch. Below is the list:
                 }
             }
 ```
+
+
+TODO
+---
+Features:
+
+- Demo data for security and other use cases
+- Setup the underlying system for workload management (systemd)
+
+Ansible:
+- Enhance service detection and status
+- Make it impotent (Trust me this will not happen any time soon)
