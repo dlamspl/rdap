@@ -71,6 +71,7 @@ Step 02: Setup EC2 prerequisites
 - Replace the ```region``` with your desired region name (default is ap-south-1). Note: If you change the region you also have to select the appropriate region AMI for Phantom from list below.
 - Replace ```keypair``` with your key name
 - Copy the key file in the ```keys``` directory
+- Change the permissions on your keypair ```chmod 700 keys/your-keypair.pem ```
 
 
 Create the images:
