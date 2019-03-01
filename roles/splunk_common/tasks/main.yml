@@ -74,7 +74,7 @@
 
 - include_tasks: splunk_phantom_config.yml
   tags: phantom-app-config
-  when: phantom_setup|bool
+  when: splunk_phantom_setup|bool
 
 
 

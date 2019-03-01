@@ -1,0 +1,12 @@
+{
+  "configuration": {
+  },
+  "description": "MAC Vendors",
+  "name": "MAC Vendors",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "MAC Vendors",
+  "product_vendor": "MAC Vendors",
+  "type": "investigate"
+
+}

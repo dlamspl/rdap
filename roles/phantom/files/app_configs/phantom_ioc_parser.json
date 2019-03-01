@@ -1,0 +1,13 @@
+{
+  "configuration": {
+   
+  },
+  "description": "This app extracts IOCs from various files such as PDFs or Emails",
+  "name": "phantom_ioc_parser",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "Parser",
+  "product_vendor": "Phantom",
+  "type": "generic"
+
+}

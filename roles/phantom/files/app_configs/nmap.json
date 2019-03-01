@@ -1,0 +1,12 @@
+{
+  "configuration": {
+  },
+  "description": "NMAP scanning",
+  "name": "NMAP",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "NMAP",
+  "product_vendor": "Generic",
+  "type": "investigate"
+
+}

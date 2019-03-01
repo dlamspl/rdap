@@ -1,0 +1,108 @@
+---
+# tasks file for roles/phantom
+# App setup - Just add the json file in files/apps
+
+
+# Create users
+
+- name: Create Analyst L1
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/ph_user/"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body_format: json
+    src: files/l1user_analyst.json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1  
+  ignore_errors: true
+  retries: 2
+  tags: phantom-demo
+
+- name: Create Analyst L2
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/ph_user/"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body_format: json
+    src: files/l2user_analyst.json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1    
+  ignore_errors: true
+  retries: 2
+  tags: phantom-demo
+
+# Activate onboarding playbook
+
+- name: Activate onboarding playbook
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/playbook/25"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body_format: json
+    src: files/activate_playbook.json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1    
+  ignore_errors: true
+  retries: 2
+  tags: phantom-demo
+
+
+# So loading json content with lookup(template) is extremely buggy with ansible. 
+# Ansible magic for jinja , so we use files
+- name: Configure app
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/asset/"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body_format: json
+    src: "{{ item }}"
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1
+  ignore_errors: true
+  retries: 2
+  tags: phantom-demo
+  with_fileglob: files/app_configs/*.json
+
+
+# Install custom apps
+
+- name: B64Encode App 
+  delegate_to: localhost
+  script: base64_file.py roles/phantom/files/apps/alienvaultotxv2.tgz
+  register: filencode_out
+  tags: phantom-demo
+
+- name: Install custom app AlienvaultOTXv2
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/app"
+    method: POST
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    body: 
+      app: "{{ filencode_out.stdout }}"        
+    body_format: json
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1    
+  ignore_errors: true
+  retries: 1
+  tags: phantom-demo
+

@@ -11,7 +11,8 @@ demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Pro
 splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
 phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
 splunk_setup: 1 #Deploy standalone splunk instance
-phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+splunk_phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+phantom_setup: 1 # Set to 1 to configure phantom servers with demo settings/data
 phantom_auth_token: "This will be changed automatically"
 phantom_default_admin_pass: "This will be changed automatically"
 phantom_initial_admin_pass: password 
@@ -30,7 +31,6 @@ splunk_aws:
   iops: 1000
   count_instances: 1
 
-
 phantom_aws:
   instance_type: t2.large
   security_group_name: phantom-servers # Change the security group name here
@@ -41,4 +41,4 @@ phantom_aws:
   instance_name_tag: "RDAPPhantomServer"
   disk_size: "200"
   disk_type: "gp2"  
-  count_instances: 1    
+  count_instances: 1 

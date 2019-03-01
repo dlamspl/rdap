@@ -1,0 +1,13 @@
+{
+  "configuration": {
+    "url": "https://www.malwaredomainlist.com"
+  },
+  "description": "Malware Domain List",
+  "name": "mdl",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "Malware Domain List",
+  "product_vendor": "Malware Domain List",
+  "type": "investigate"
+
+}

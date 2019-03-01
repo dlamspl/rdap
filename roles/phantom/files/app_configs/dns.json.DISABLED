@@ -1,0 +1,13 @@
+{
+  "configuration": {
+    "dns_server": "8.8.8.8"
+  },
+  "description": "Default DNS (Google)",
+  "name": "dns",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "DNS",
+  "product_vendor": "Generic",
+  "type": "investigate"
+
+}

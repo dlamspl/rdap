@@ -1,0 +1,23 @@
+{
+  "configuration": {
+    "create_artifacts": 10,
+    "create_containers": 3,
+    "randomize_container_status": "True",
+    "event_owner_range": "3-4",
+    "ingest": {
+        "container_label": "events",
+        "interval_mins": 30,
+        "poll":  true,
+        "start_time_epoch_utc": null
+    },
+
+  },
+  "description": "Phantom Eventgen",
+  "name": "peventgen",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "Generator",
+  "product_vendor": "Generic",
+  "type": "ingest"
+
+}

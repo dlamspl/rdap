@@ -1,0 +1,12 @@
+{
+  "configuration": {
+  },
+  "description": "Whois RDAP (IP)",
+  "name": "whois_ip",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "Whois RDAP",
+  "product_vendor": "Generic",
+  "type": "investigate"
+
+}

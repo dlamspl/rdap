@@ -1,0 +1,17 @@
+{
+  "configuration": {
+  	"username": "8.8.8.8",
+  	"verify_certificate": "False",
+  	"auth_token": "NONE",
+  	"phantom_server": "127.0.0.1"
+   
+  },
+  "description": "This app extracts IOCs from various files such as PDFs or Emails",
+  "name": "phantom_api",
+  "primary_owners": [ ],
+  "primary_voting": 0,
+  "product_name": "Phantom",
+  "product_vendor": "Phantom",
+  "type": "generic"
+
+}

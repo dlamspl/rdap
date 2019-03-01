@@ -1,6 +1,4 @@
 ---
-
-
 - name: Gather facts about "{{ splunk_aws.instance_name_tag }}" launched instances
   ec2_instance_facts:    
     filters:
