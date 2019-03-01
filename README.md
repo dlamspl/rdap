@@ -189,6 +189,14 @@ username: admin
 password: AWS instance ID (can be found in the root_vars/ec2_image_vars.yml -> phantom_default_admin_pass)
 ```
 
+To login to Splunk you can access the instance at 
+```
+http://PUBLIC_IP:8000
+Use the below credentials to login to the web interface
+username: admin
+password: Password1
+```
+
 To login to the Centos or Phantom Image ssh to the public IP with the -i key option and the file name.
 
 Examples:
