@@ -4,11 +4,11 @@ RDAP
 RDAP is small collection of ansible playbooks aimed at seting up a POC/DEMO environment 
 of splunk and phantom on EC2 (plus other stuff ;). This small project started with the following objectives:
 1. Be as standalone as possible. Meaning no specific host OS or minimal installed packages
-2. Easy to run and documented (to a certain extent) so that everyine can use it without being an ansible expert
-3. Provide out of the box Splunk standlone and Phantom environment for demo or POC. And I mean out of the box
+2. Easy to run and documented (to a certain extent) so that everyone can use it without being an ansible expert
+3. Provide out of the box Splunk standlone and Phantom environment for demo or POC
 4. To learn ansible and Splunk ! 
 
-So what does this do ?
+So what does RDAP do ?
 ---
 In high level it does the following:
 1. Create as many EC2 instances as required, both standard AMIs and Phantom 
@@ -17,6 +17,7 @@ In high level it does the following:
 4. Install various Splunk apps
 5. Configure the Phantom instance on Splunk
 6. Install monitoring agent for IT App for Infrastructure on the Splunk machine
+7. Setup Phantom 4.1
 
 Tested on:
 * Python 2.7.10
@@ -36,8 +37,8 @@ What you need
 * Splunk app packages (optional)
 
 Notes:
-- Charges will be applied on your running EC2 instances as per amazon policies
-- Phantom AMI from marketplace recommends t2.xlarge instance type. The default for this playbook is t2.medium
+- Charges will be applied on your running EC2 instances as per amazon pricing policies
+- Phantom AMI from marketplace recommends t2.xlarge instance type. The default for this playbook is t2.large
 
 What you get
 ---
@@ -52,7 +53,7 @@ Well you would have got a lot more, but there are some constraints:
   |       |       |       |
    -------         -------
 ```
-1. Splunk enterpise with various apps installed and integrated with your Phantom instance
+1. Splunk enterpise core with various apps installed and integrated with your Phantom instance
   - Phantom apps
   - IT app for infrastructure and localhost added as entity
   - Other apps
@@ -99,7 +100,7 @@ Step 02: Setup EC2 prerequisites
 - Edit the file ```root_vars/ec2_image_vars.yml```
 - Replace the ```region``` with your desired region name (default is ap-south-1). Note: If you change the region you also have to select the appropriate region AMI for Phantom from list below.
 - Replace ```keypair``` with your key name
-- Copy the key file in the ```keys``` directory
+- Copy your AWS key file in the ```keys``` directory
 - Change the permissions on your keypair ```chmod 700 keys/your-keypair.pem ```
 
 
@@ -110,7 +111,7 @@ Consult https://docs.aws.amazon.com/general/latest/gr/rande.html for available A
 
 Step 03: Customize settings
 ---
-Currently you can use variable to customize the creation of the EC2 instances or the Splunk deployment. 
+Currently you can use variables to customize the creation of the EC2 instances or the Splunk deployment. 
 
 Settings for EC2
 --
@@ -136,9 +137,9 @@ splunk_aws:
   security_group_desc: "Security Group for splunk Servers"
   image_ami_id: "ami-1780a878" # This is the linux Centos AMI 
   hosts_group: "splunk_servers"
-  instance_name_tag: "RDAPSplunkServer"
+  instance_name_tag: "RDAPSplunkServer" # Change this to the name you want 
   disk_size: "20" # Disk size in GB
-  disk_type: "gp2" # If you want high IOPS set this to io1
+  disk_type: "gp2" # If you want high IOPS set this to io1 (io1 - default)
   iops: 1000 # Set this to IOPS you want if the above setting is io1, otherwise it is ignored
   count_instances: 1 # How many instances with this tag you want to create
 
@@ -158,7 +159,7 @@ phantom_aws:
 
 Settings for Splunk
 --
-You can change the splunk related variables by editing the file root_vars/splunk_deployment_vars.yml . All apps should be under files/directory.
+You can change the splunk related variables by editing the file ```root_vars/splunk_deployment_vars.yml``` . All apps should be under files/ directory.
 ```
 delay_num: 100 #Generic delay
 splunk_license_included: 0 # If you want to add a license file set this flag to 1. Otherwise 30 day trial is used.
