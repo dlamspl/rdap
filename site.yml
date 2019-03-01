@@ -46,11 +46,7 @@
 # Install SPlunk
 - import_playbook: deploy_splunk.yml
   when: splunk_init|bool
-
-- pause: 
-    minutes: 3
-    prompt: "Give phantom some time to initiate. If the phantom setup is selected and actions fail, rerun phantom setup after a few minutes"
-
+  
 - import_playbook: phantom_setup.yml
   when: phantom_setup|bool
   tags: phantom-demo
