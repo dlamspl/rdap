@@ -39,11 +39,40 @@ Notes:
 - Charges will be applied on your running EC2 instances as per amazon policies
 - Phantom AMI from marketplace recommends t2.xlarge instance type. The default for this playbook is t2.medium
 
+What you get
+---
+Well you would have got a lot more, but there are some constraints:
+1. Time
+2. Some Splunk and Phantom functionality is not available via API or is not documented , therefore it is not straightforward to code the entire setup of the demo environment.
+
+```
+   -------         -------
+  |       |       |       |
+  | Splunk|  ---> |Phantom|
+  |       |       |       |
+   -------         -------
+```
+1. Splunk enterpise with various apps installed and integrated with your Phantom instance
+  - Phantom apps
+  - IT app for infrastructure and localhost added as entity
+  - Other apps
+2. Phantom image already setup (or mostly setup)
+  - Virustotal
+  - AlienvaultOTX
+  - Generator
+  - Other free apps
+
+![Splunk](https://github.com/dlamspl/rdap/blob/master/docs/images/splunkdefault.png)
+![Phantom](https://github.com/dlamspl/rdap/blob/master/docs/images/phantomevents.png)
+![SplunkITAppInfrastructure](https://github.com/dlamspl/rdap/blob/master/docs/images/splunkitapp.png)
+![SplunkPhantom](https://github.com/dlamspl/rdap/blob/master/docs/images/splunkphantom.png)
+
+
 [Quick Install]
 ---
 1. Complete Steps 01-02
-3. ```ansible-playbook -i hosts site.yml ```
-
+2. ```ansible-playbook -i hosts site.yml ```
+3. Got to Step 04 to login to your hosts.
 
 Step 01: Setup your ansible environment
 ----
@@ -96,7 +125,8 @@ demo_env: 1 # Set this to 1 if you want full demo environment setup (Work in Pro
 splunk_init: 1 # If this is set to 1 it will create Centos AWS image (to be used for splunk)
 phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS marketplace
 splunk_setup: 1 # Deploy standalone splunk instance
-phantom_setup: 1 # Set to 1 if you want the phantom instance to be added to splunk server
+splunk_phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
+phantom_setup: 1 # Set to 1 to configure phantom servers with demo settings/data
 phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
 phantom_default_admin_pass: "This will be changed automatically"
 
@@ -155,7 +185,7 @@ To login to Phantom wait for a few minutes (5-10) and then you can access the in
 https://PUBLIC_IP
 Use the below credentials to login to the web interface
 username: admin
-password: AWS instance ID
+password: AWS instance ID (can be found in the root_vars/ec2_image_vars.yml -> phantom_default_admin_pass)
 ```
 
 To login to the Centos or Phantom Image ssh to the public IP with the -i key option and the file name.
@@ -233,6 +263,11 @@ Features:
 
 - Demo data for security and other use cases
 - Setup the underlying system for workload management (systemd)
+- Phantom playbook for demo for full cycle with ES notables (from A-Z)
+- ES and Phantom notable events
+- Phantom ES integration
+- Dynamic HEC tokens
+- A lot more (if time ever allows)
 
 Ansible:
 - Enhance service detection and status
