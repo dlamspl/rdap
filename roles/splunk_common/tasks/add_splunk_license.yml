@@ -6,7 +6,7 @@
     remote_src: false
     mode: preserve
 
-- name: Apply Splunk license
+- name: Add Splunk license
   command: "{{ splunk.exec }} add licenses {{ splunk_license_path }} -auth admin:{{ splunk.password }}"
   when:
     - splunk.license_file is defined
@@ -20,9 +20,13 @@
 - name: Set as license slave
   include_tasks: set_as_license_slave.yml
   vars:
-    license_master_host: "{{ license_master_host }}"
+    license_master_host: "{{ groups.splunk_license_master[0] }}"
   when:
-    - splunk.role != "splunk_license_master"
+    - splunk.license_master_included | bool
+    - splunk.role != "splunk_license_master"   
+
+- name: Flush handlers
+  meta: flush_handlers     
 
 
 

@@ -19,6 +19,8 @@ In high level it does the following:
 6. Install monitoring agent for IT App for Infrastructure on the Splunk machine
 7. Setup Phantom 4.1
 
+For more see Appendix - 1 - Advanced usage
+
 Tested on:
 * Python 2.7.10
 * MacOSX
@@ -281,3 +283,8 @@ Features:
 Ansible:
 - Enhance service detection and status
 - Make playbooks more atomic (Trust me this will not happen any time soon)
+
+Appendix - 1 - Advanced usage
+---
+
+
