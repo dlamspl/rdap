@@ -2,6 +2,37 @@
 # tasks file for roles/phantom
 # App setup - Just add the json file in files/apps
 
+# Try to find which password is active :/ damn
+
+
+- name: Auth test
+  uri:
+    url: "https://{{ groups['phantom_servers'][0] }}/rest/version/"
+    method: GET
+    user: admin
+    password: "{{ phantom_default_admin_pass }}"
+    force_basic_auth: yes
+    validate_certs: false
+    status_code: 200
+    timeout: 10
+  delegate_to: 127.0.0.1  
+  ignore_errors: true
+  retries: 1
+  tags: phantom-demo
+  register: auth_test
+
+- debug:
+    var=auth_test 
+
+- set_fact:
+    phantom_pass: "{{ phantom_default_admin_pass }}"
+  when: auth_test.status == 200
+  tags: phantom-demo
+
+- set_fact:
+    phantom_pass: "{{ phantom_initial_admin_pass }}"
+  when: auth_test.status == 401
+  tags: phantom-demo  
 
 # Create users
 
@@ -10,7 +41,7 @@
     url: "https://{{ groups['phantom_servers'][0] }}/rest/ph_user/"
     method: POST
     user: admin
-    password: "{{ phantom_initial_admin_pass }}"
+    password: "{{ phantom_pass }}"
     body_format: json
     src: files/l1user_analyst.json
     force_basic_auth: yes
@@ -27,7 +58,7 @@
     url: "https://{{ groups['phantom_servers'][0] }}/rest/ph_user/"
     method: POST
     user: admin
-    password: "{{ phantom_initial_admin_pass }}"
+    password: "{{ phantom_pass }}"
     body_format: json
     src: files/l2user_analyst.json
     force_basic_auth: yes
@@ -46,7 +77,7 @@
     url: "https://{{ groups['phantom_servers'][0] }}/rest/playbook/25"
     method: POST
     user: admin
-    password: "{{ phantom_initial_admin_pass }}"
+    password: "{{ phantom_pass }}"
     body_format: json
     src: files/activate_playbook.json
     force_basic_auth: yes
@@ -66,7 +97,7 @@
     url: "https://{{ groups['phantom_servers'][0] }}/rest/asset/"
     method: POST
     user: admin
-    password: "{{ phantom_initial_admin_pass }}"
+    password: "{{ phantom_pass }}"
     body_format: json
     src: "{{ item }}"
     force_basic_auth: yes
@@ -93,7 +124,7 @@
     url: "https://{{ groups['phantom_servers'][0] }}/rest/app"
     method: POST
     user: admin
-    password: "{{ phantom_initial_admin_pass }}"
+    password: "{{ phantom_pass }}"
     body: 
       app: "{{ filencode_out.stdout }}"        
     body_format: json

@@ -1,7 +1,7 @@
 ---
 # Playbook to configure phantom servers with demo settings
 # Relevant vars can be found in root_vars/phantom_setup_vars.yml
-- name: Setup phantom demo
+- name: Setup phantom server
   hosts: phantom_servers
 
   vars_files:
@@ -11,5 +11,5 @@
     - name: Phantom servers setup
       include_role:
         name: "phantom"
-      when: phantom_setup|bool  
+      when: phantom_init|bool  
       tags: phantom-demo
