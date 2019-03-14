@@ -130,11 +130,11 @@ phantom_init: 1 # If this is set to 1 it will create the Phantom image from AWS 
 splunk_setup: 1 # Deploy standalone splunk instance
 splunk_phantom_setup: 1 #Set to 1 if you want the phantom instance to be added to splunk server
 phantom_setup: 1 # Set to 1 to configure phantom servers with demo settings/data
-phantom_auth_token: "This will be changed automatically" #AUTO CHANGED
+phantom_auth_token: "This will be changed automatically" 
 phantom_default_admin_pass: "This will be changed automatically"
 
 splunk_aws:
-  instance_type: t2.small
+  instance_type: t2.large
   security_group_name: splunk-servers # Change the security group name here
   security_group_desc: "Security Group for splunk Servers"
   image_ami_id: "ami-1780a878" # This is the linux Centos AMI 
@@ -179,7 +179,8 @@ splunk:
 To show deployment information after installation has finished:
 ```ansible-playbook -i hosts site.yml --tags "info"```
 
-
+Note: Apps installed 
+Currently apps can be installed either by local filesystem (copying over-slow) or from Git repo. Soon combination of both will be added. For Splunk ES is only from local so you have to make sure that the ES spl app is under roles/splunk_common/files
 
 Step 04: Login/Verify your images (Not required if all playbooks are run)
 ---

@@ -1,0 +1,12 @@
+---
+
+- name: Download app "{{ app_file }}" from remote Git
+  get_url: 
+    url: "{{ splunk.apps_git_location }}/{{ app_file }}?raw=true"
+    dest: "~/{{ app_file }}"
+    #checksum: md5:ac6f332dc37845e5d68516233cf8dc8e
+
+- name: Install Splunk app "{{ app_file }}"
+  command: "{{ splunk.exec }} install app ~/{{ app_file }} -update 1 -auth admin:{{ splunk.password }}"
+  when: splunk.install_apps_git|bool
+  ignore_errors: true    

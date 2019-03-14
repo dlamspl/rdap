@@ -52,10 +52,20 @@
 
 - include_tasks: set_as_hec_receiver.yml
 
+
+- include_tasks: install_apps_git.yml
+  vars:
+    app_file: "{{ item }}"
+  loop: "{{ splunk.apps }}"
+  when: splunk.install_apps_git|bool
+  notify:
+    - Restart the splunkd service
+
 - include_tasks: install_app.yml
   vars:
     app_file: "{{ item }}"
   loop: "{{ splunk.apps }}"
+  when: splunk.install_apps|bool
   notify:
     - Restart the splunkd service
 
