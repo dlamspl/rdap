@@ -1,1 +1,2 @@
-curl -ku 'admin:{{ splunk.password }}'  https://127.0.0.1:{{ splunk.svc_port }}/services/update_phantom_config -d config=%5B%7B%22ph-auth-token%22%3A%22{{ splunk_phantom_token_for_rest }}%22%2C%22server%22%3A%22https%3A%2F%2F{{ phantom_host }}%22%7D%5D
+
+curl -ku 'admin:{{ splunk.password }}'  https://127.0.0.1:{{ splunk.svc_port }}/services/update_phantom_config -d config=%5B%7B%22ph-auth-token%22%3A%22{{ splunk_phantom_token_for_rest }}%3D%22%2C%22server%22%3A%22https%3A%2F%2F{{ phantom_host }}%22%7D%5D
